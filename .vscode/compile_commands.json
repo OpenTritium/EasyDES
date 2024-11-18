@@ -1,0 +1,11 @@
+[
+{
+  "directory": "/home/TritiumQin/Homework/crypto/DES/DES",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-g", "-O0", "-o", "build/.objs/table/linux/x86_64/debug/tests/table.cpp.o", "tests/table.cpp"],
+  "file": "tests/table.cpp"
+},
+{
+  "directory": "/home/TritiumQin/Homework/crypto/DES/DES",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-g", "-O0", "-std=c++26", "-o", "build/.objs/DES/linux/x86_64/debug/src/main.cpp.o", "src/main.cpp"],
+  "file": "src/main.cpp"
+}]
