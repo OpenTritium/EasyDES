@@ -5,14 +5,21 @@ target("DES")
     add_files("src/*.cpp")
     set_languages("c++26")
 
-for _, file in ipairs(os.files("tests/*.cpp")) do
-     local name = path.basename(file)
-     target(name)
-         set_kind("binary")
-         set_default(false)
-         add_packages("gtest")
-         add_files("tests/"..name..".cpp")
-end
+target("test_0")
+    add_tests("boxes")
+    set_kind("binary")
+    set_default(false)
+    add_packages("gtest")
+    set_languages("c++26")
+    add_files("tests/boxes/*.cpp")
+
+target("test_1")
+    add_tests("opts")
+    set_kind("binary")
+    set_default(false)
+    add_packages("gtest")
+    set_languages("c++26")
+    add_files("tests/opts/*.cpp")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
