@@ -1,6 +1,8 @@
 add_rules("mode.debug", "mode.release")
 add_requires("gtest")
+add_requires("boost", {configs = {all = true}})
 target("DES")
+    add_packages("boost")
     set_kind("binary")
     add_files("src/*.cpp")
     set_languages("c++26")

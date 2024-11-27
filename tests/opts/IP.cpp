@@ -1,6 +1,7 @@
+#include "../../src/utils.hpp"
 #include "gtest/gtest.h"
-#include "../../src/block.cpp"
-int main(){
-    Block b {.data = 0b1000000000000000000000000000000000000000};
-    EXPECT_EQ(b.initiallyPermutate().data, 1);
+
+TEST(opts, IP_check) {
+ EXPECT_EQ(permute<uint64_t>(IP, 1ULL),0b1000000000000000000000000000000000000000ULL);
+ EXPECT_EQ(permute<uint64_t>(IP, 0b1000000ULL),0b1000000000000000000000000000000000000000000000000000000000000000ULL);
 }
