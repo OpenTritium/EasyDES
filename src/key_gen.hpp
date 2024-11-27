@@ -14,7 +14,7 @@ struct Key {
       uint8_t p3;
     };
   } data;
-  bool evenParity() {
+  bool checkEvenParity() const noexcept {
     const auto ps{std::array<uint8_t, 4>{data.p0, data.p1, data.p2, data.p3}};
     uint8_t parity{};
     for (const auto e : ps) {
