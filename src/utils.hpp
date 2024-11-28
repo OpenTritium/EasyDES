@@ -23,7 +23,7 @@ static constexpr O permute(const std::array<uint8_t, N> &box,
                            const I bufferRead) {
   O buffer{};
   for (const auto &[index, offset] : box | std::views::enumerate) {
-    if ((bufferRead >> offset & 1) != 0) {
+    if ((bufferRead >> offset & 1U) != 0) {
       O mask{std::integral_constant<O, 1>::value << index};
       buffer |= mask;
     }
