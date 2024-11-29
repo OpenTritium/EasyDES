@@ -3,14 +3,22 @@
 #include <cstdint>
 #include <utility>
 
-struct Key {
-  using HalfKey = union {
-    uint32_t full;
-    struct {
-      uint32_t valid : 28;
-      uint32_t padding : 4;
-    };
+constexpr uint8_t VALID_BITS_HALF_COUNT {28};
+union HalfKey {
+  uint32_t full;
+  struct {
+    uint32_t valid : VALID_BITS_HALF_COUNT;
+    uint32_t padding : 32-VALID_BITS_HALF_COUNT;
   };
+  void leftShift(uint8_t bitCount) {
+    const uint32_t mask{bitCount == 2 ? 0b110000000000000000000000000000UL
+                                      : 0b10000000000000000000000000000UL};
+    full <<= bitCount;
+    full |= ((full & mask) >> VALID_BITS_HALF_COUNT);
+  }
+};
+struct Key {
+
   union {
     uint64_t full{};
     struct {
@@ -43,23 +51,30 @@ struct Key {
     return parity == 0 ? true : false;
   }
   auto splitAndStripCheckBits() {
-    uint32_t low{}, high{};
-    constexpr uint8_t validBitsMask{0b01111111};
-
     auto stripCheckBits{[](std::array<uint8_t, 4> &&t) {
-      uint32_t half{};
+      constexpr uint8_t validBitsMask{0b01111111};
+      HalfKey half{};
       size_t i{};
       while (i != 4) {
-        half |= (t[i] & validBitsMask);
+        half.full |= (t[i] & validBitsMask);
         ++i;
         if (i == 4)
           break;
-        half <<= 7;
+        half.full <<= 7;
       }
       return half;
     }};
+    // caution: little-end
     return std::make_pair(
-        stripCheckBits(std::array{data.p0, data.p1, data.p2, data.p3}),
-        stripCheckBits(std::array{data.p4, data.p5, data.p6, data.p7}));
+        stripCheckBits(std::array{data.p3, data.p2, data.p1, data.p0}),
+        stripCheckBits(std::array{data.p7, data.p6, data.p5, data.p4}));
+  }
+  uint64_t mergeLowHigh(){
+    const auto [low,high] = splitAndStripCheckBits();
+    uint64_t result{};
+    result |= high.valid;
+    result <<= VALID_BITS_HALF_COUNT;
+    result |= low.valid;
+    return result;
   }
 };

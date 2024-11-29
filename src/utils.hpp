@@ -17,6 +17,10 @@ static constexpr std::array<uint8_t, 48> EP{
     11, 12, 11, 12, 13, 14, 15, 16, 15, 16, 17, 18, 19, 20, 19, 20,
     21, 22, 23, 24, 23, 24, 25, 26, 27, 28, 27, 28, 29, 30, 31, 0};
 
+static constexpr std::array<uint8_t, 48> CP{
+    13, 16, 10, 23, 0,  4,  2,  27, 14, 5,  20, 9,  22, 18, 11, 3,
+    25, 7,  15, 6,  26, 19, 12, 1,  40, 51, 30, 36, 46, 54, 29, 39,
+    50, 44, 32, 47, 43, 48, 38, 55, 33, 52, 45, 41, 49, 35, 28, 31};
 template <typename O, typename I, size_t N>
 [[nodiscard]]
 static constexpr O permute(const std::array<uint8_t, N> &box,
