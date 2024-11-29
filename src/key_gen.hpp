@@ -1,7 +1,5 @@
+#pragma once
 #include <array>
-#include <cstddef>
-#include <cstdint>
-#include <utility>
 
 constexpr uint8_t VALID_BITS_HALF_COUNT {28};
 union HalfKey {
