@@ -2,12 +2,14 @@
 #include <array>
 #include <cstdint>
 
-constexpr uint8_t VALID_BITS_HALF_COUNT {28};
+constexpr uint8_t VALID_BITS_HALF_COUNT{28};
+static constexpr std::array<uint8_t, 16> shiftTable{1, 1, 2, 2, 2, 2, 2, 2,
+                                                    1, 2, 2, 2, 2, 2, 2, 1};
 union HalfKey {
   uint32_t full;
   struct {
     uint32_t valid : VALID_BITS_HALF_COUNT;
-    uint32_t padding : 32-VALID_BITS_HALF_COUNT;
+    uint32_t padding : 32 - VALID_BITS_HALF_COUNT;
   };
   void leftShift(uint8_t bitCount) {
     const uint32_t mask{bitCount == 2 ? 0b110000000000000000000000000000U
@@ -35,8 +37,6 @@ struct Key {
       uint8_t p7;
     };
   } data;
-  static constexpr std::array<uint8_t, 16> shiftTable{1, 1, 2, 2, 2, 2, 2, 2,
-                                                      1, 2, 2, 2, 2, 2, 2, 1};
   [[nodiscard]]
   bool checkEvenParity() const noexcept {
     const auto ps{std::array<uint8_t, 8>{data.p0, data.p1, data.p2, data.p3,
@@ -56,7 +56,8 @@ struct Key {
       std::size_t i{};
       while (true) {
         half.full |= (t[i] & validBitsMask);
-        if (++i == 4) break;
+        if (++i == 4)
+          break;
         half.full <<= 7;
       }
       return half;
@@ -66,7 +67,7 @@ struct Key {
         stripCheckBits(std::array{data.p3, data.p2, data.p1, data.p0}),
         stripCheckBits(std::array{data.p7, data.p6, data.p5, data.p4}));
   }
-  uint64_t mergeLowHigh(){
+  uint64_t mergeLowHigh() {
     uint64_t result{};
     result |= data.high.valid;
     result <<= VALID_BITS_HALF_COUNT;

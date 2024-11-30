@@ -13,9 +13,6 @@ struct Block {
   uint32_t getHighPart() const noexcept { return data.high; }
   uint64_t getFull() const noexcept { return data.full; }
   Block swapLowHigh() const noexcept {
-    return {
-      .data { .low = getHighPart(), .high = getLowPart() }
-    };
+    return {.data{.low = getHighPart(), .high = getLowPart()}};
   }
 };
-// 设计成接受谓词

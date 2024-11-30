@@ -2,23 +2,21 @@
 #include "key_gen.hpp"
 #include "utils.hpp"
 #include <bitset>
-#include <cstddef>
 #include <cstdint>
 #include <iostream>
-#include <print>
 
 constexpr std::size_t ROUND_COUNT{16};
+
 int main() {
   Block raw{0xFFFFFFFFFFFFFFFF};
   Key k{0xFFFFFFFFFFFFFFFF};
   Block iped{permute<uint64_t>(IP, raw.getFull())}; // 初始置换
-  auto nd{iped}; // 用于迭代
+  auto nd{iped};                                    // 用于迭代
   for (std::size_t i{}; i != ROUND_COUNT; ++i) {
     auto [nl, nh] =
         k.splitAndStripCheckBits(); // 解构去除校验位的28位左半部分和右半部分
-    nl.leftShift(2);                // 低位部分循环左移
-    nh.leftShift(1);                // 高位部分循环左移
-
+    nl.leftShift(shiftTable[i]);          // 低位部分循环左移
+    nh.leftShift(shiftTable[i]);          // 高位部分循环左移
     Key nk{.data{.low = nl, .high = nh}}; // 生成本次循环所使用的密钥
     uint64_t cped{permute<uint64_t>(
         CP, nk.mergeLowHigh())}; // 将两个低28位并到低56位，再压缩置换到48位
