@@ -11,7 +11,7 @@ union HalfKey {
     uint32_t valid : VALID_BITS_HALF_COUNT;
     uint32_t padding : 32 - VALID_BITS_HALF_COUNT;
   };
-  void leftShift(uint8_t bitCount) {
+  void leftShift(uint8_t bitCount) noexcept {
     const uint32_t mask{bitCount == 2 ? 0b110000000000000000000000000000U
                                       : 0b010000000000000000000000000000U};
     full <<= bitCount;
@@ -49,7 +49,7 @@ struct Key {
     }
     return parity == 0 ? true : false;
   }
-  auto splitAndStripCheckBits() {
+  auto splitAndStripCheckBits() const noexcept {
     auto stripCheckBits{[](std::array<uint8_t, 4> &&t) {
       constexpr uint8_t validBitsMask{0b01111111};
       HalfKey half{};
@@ -67,7 +67,7 @@ struct Key {
         stripCheckBits(std::array{data.p3, data.p2, data.p1, data.p0}),
         stripCheckBits(std::array{data.p7, data.p6, data.p5, data.p4}));
   }
-  uint64_t mergeLowHigh() {
+  uint64_t mergeLowHigh() const noexcept {
     uint64_t result{};
     result |= data.high.valid;
     result <<= VALID_BITS_HALF_COUNT;

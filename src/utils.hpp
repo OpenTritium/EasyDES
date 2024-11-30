@@ -28,7 +28,7 @@ static constexpr std::array<uint8_t, 48> CP{
 template <typename O, typename I, size_t N>
 [[nodiscard]]
 static constexpr O permute(const std::array<uint8_t, N> &box,
-                           const I bufferRead) {
+                           const I bufferRead) noexcept {
   O buffer{};
   for (const auto &[index, offset] : box | std::views::enumerate) {
     if ((bufferRead >> offset & 1U) != 0) {
@@ -93,14 +93,15 @@ static constexpr std::array<uint8_t, 32> P{
     15, 6, 19, 20, 28, 11, 27, 16, 0,  14, 22, 25, 4,  17, 30, 9,
     1,  7, 23, 13, 31, 26, 2,  8,  18, 12, 29, 5,  21, 10, 3,  24};
 
-static constexpr uint8_t sBoxFinder(const uint8_t inBits6, const SBox *box) {
+static constexpr uint8_t sBoxFinder(const uint8_t inBits6,
+                                    const SBox *box) noexcept {
   uint8_t row{
       static_cast<uint8_t>(((0b100000U & inBits6) >> 4) | (1U & inBits6))};
   uint8_t col{static_cast<uint8_t>((0b11110U & inBits6) >> 1)};
   return (*box)[row][col];
 }
 
-static constexpr uint32_t substitute(uint64_t inBits48) {
+static constexpr uint32_t substitute(uint64_t inBits48) noexcept {
   uint32_t result{};
   auto getBitField{[inBits48](size_t idx) {
     return static_cast<uint8_t>((0b111111U << idx) & inBits48);
